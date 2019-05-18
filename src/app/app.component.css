@@ -1,0 +1,28 @@
+table {
+    table-layout:fixed;
+    font-size: 30px;
+    text-align: center;
+    margin: auto;
+    }
+    
+td, tr {
+  border: 2px solid wheat;
+  color: azure;
+  width: 100px;
+  height: 100px;
+}
+
+.center {
+  margin: auto;
+  width: 50%;
+  border: 3px solid white;
+  padding: 10px;
+  text-align: center;
+  background-color: steelblue;
+}
+
+button {
+  color: white;
+  font-size: 20px;
+}
+

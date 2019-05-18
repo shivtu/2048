@@ -1,0 +1,13 @@
+<div class="center">
+  <h2>Score {{moveNumber}}</h2>
+  <table>
+    <tr *ngFor="let items of mainboard">
+      <td *ngFor="let item of items">
+        <p *ngIf= "item>0" @fade>{{item}}</p>
+      </td>
+    </tr>
+  </table>
+  <hr/>
+  <button (click)="newGame()" class="center">New Game</button>
+</div>
+
