@@ -21,10 +21,10 @@ export class AppComponent implements OnInit {
   constructor(private records: RecordsService) {}
 
   mainboard = [
-    [2, 2, 4, 0],
-    [4, 4, 4, 0],
-    [2, 2, 2, 2],
-    [2, 2, 0, 2]
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0]
   ];
 
   moveNumber = 0;
@@ -58,18 +58,22 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.records.populateRandom(this.mainboard);
-    // this.records.populateRandom(this.mainboard);
+    this.records.populateRandom(this.mainboard);
+    this.records.populateRandom(this.mainboard);
   }
 
   userArrowRight() {
     const boardState = this.records.shiftHorizontal('right', this.mainboard, this.moveNumber);
-    // boardState.mainboardState = this.mainboard;
-    // this.moveNumber = boardState.move;
-    // this.gameStatus = this.records.populateRandom(this.mainboard);
+    boardState.mainboardState = this.mainboard;
+    this.moveNumber = boardState.move;
+    this.gameStatus = this.records.populateRandom(this.mainboard);
   }
 
   userArrowLeft() {
+    const boardState = this.records.shiftHorizontal('left', this.mainboard, this.moveNumber);
+    boardState.mainboardState = this.mainboard;
+    this.moveNumber = boardState.move;
+    this.gameStatus = this.records.populateRandom(this.mainboard);
   }
 
   userArrowDown() {

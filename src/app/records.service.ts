@@ -7,8 +7,9 @@ export class RecordsService {
 
   constructor() { }
 
-    /* shift all elements up & merge same elements;
-      1 col at a time */
+    /* shift all elements up & merge same elements;1 col at a time
+    Method will shift elements up or down as per vShift param*/
+
     shiftVertical(vShift: string, mainboard: any, moveNumber: number) {
 
       // console.time("setBoard");
@@ -21,6 +22,7 @@ export class RecordsService {
           /* Re-initialize p for every col */
           let p = 0;
 
+          /* populate temp array with the elements in the last col in the matrix */
           while (p <= 3) {
             tempArray.push(mainboard[p][q]);
             p++;
@@ -49,13 +51,12 @@ export class RecordsService {
             }
 
           /* Filter all elements greater than 0 */
-
           tempArray = tempArray.filter(val => val);
 
-            // debugger;
+          // debugger;
 
-            /* Concat 0's to remaining size of the array
-            and shift non zero values to the left of the array */
+          /* Concat 0's to remaining size of the array
+          and shift non zero values to the left of the array */
 
           let temp: number = 4 - tempArray.length;
           while (temp > 0) {
@@ -63,17 +64,16 @@ export class RecordsService {
               temp--;
             }
 
-          /* Replace the main board values with tempArray */
-          if (vShift === 'up') {
+          /* Replace the main board values with tempArray values */
+          if (vShift === 'up') { // shift elements upwards
             let x = 0;
             while (x <= 3) {
               mainboard[x][q] = tempArray[x];
               x++;
               }
-          } else if (vShift === 'down') {
+          } else if (vShift === 'down') { // shift elements downwards
 
             /* filter all elements greater than 0 */
-
             tempArray = tempArray.filter(val => val);
             let nextTemp = 4 - tempArray.length;
 
@@ -107,46 +107,92 @@ export class RecordsService {
     }
 
 
+    /* shift all elements up & merge same elements; 1 row at a time
+    hShift param will decide if elements move left of right */
 
-    /* shift all elements up & merge same elements;
-      1 col at a time */
     shiftHorizontal(hShift: string, mainboard: any, moveNumber: number) {
 
-      /* Merge cells with same values */
+      /* Take 1 row at a time to merge and shift horizntally */
+      let q = 0;
+      while (q <= 3) {
 
+         /* Re-initialize tempArray for every row */
+         let tempArray = [];
 
-      /* Pack elements to the right of the array */
+         /* Re-initialize p for every row */
+         let p = 0;
 
-      let tempArray = [];
-      let rows = 0;
+         while (p <= 3) {
+           tempArray.push(mainboard[q][p]);
+           p++;
+         }
+         // console.log('before merge', tempArray);
 
-      while (rows < 4) {
-        for (let i = 0; i < 4; i++) {
-          tempArray.push(mainboard[rows][i]);
-        }
-        /* Filter all elements greater than 0 */
-        tempArray = tempArray.filter(val => val);
-        console.log('temparray', tempArray);
+        /* Merge cells with same values */
+         for (let i = 0; i < 4; i++) {
+          if ((tempArray[i] !== 0 || undefined) && tempArray[i] === tempArray[i + 1] && (i + 1 < 4)) {
+            tempArray[i] = tempArray[i] * 2;
+            tempArray[i + 1] = 0;
+            moveNumber = moveNumber + tempArray[i];
 
-        let nextTemp = 4 - tempArray.length;
-        // console.log('4-tempArray length', nextTemp);
-        let nextArray = [];
-        while (nextTemp > 0) {
-          nextArray = nextArray.concat(0);
-          nextTemp--;
-      }
-        console.log('nextArray', nextArray);
-        if (hShift === 'right') {
-          tempArray = nextArray.concat(tempArray);
-          for (let q = 0; q < 4; q++) {
-            mainboard[rows][q] = tempArray[q];
+          } else if ((tempArray[i] !== 0 || undefined) && (tempArray[i + 1] === 0 || undefined)
+          && tempArray[i] === tempArray[i + 2] && (i + 2 < 4)) {
+            tempArray[i] = tempArray[i] * 2;
+            tempArray[i + 2] = 0;
+            moveNumber = moveNumber + tempArray[i];
+
+          } else if ((tempArray[i] !== 0 || undefined) && (tempArray[i] === tempArray[i + 3]) && (tempArray[i + 1] === 0 || undefined)
+            && (tempArray[i + 2] === 0 || undefined) && (tempArray[i + 3] !== 0 || undefined) && (i + 3 < 4)) {
+              tempArray[i] = tempArray[i] * 2;
+              tempArray[i + 3] = 0;
+              moveNumber = moveNumber + tempArray[i];
           }
         }
-        console.log('final', tempArray);
-        rows++;
-        tempArray = [];
+
+        // console.log('after merge', tempArray);
+         /* Filter all elements greater than 0 */
+
+         tempArray = tempArray.filter(val => val);
+         // console.log('after filter', tempArray);
+
+         /* Concat 0's to remaining size of the array
+          and shift non zero values to the left of the array */
+
+         let temp: number = 4 - tempArray.length;
+         let nextArray = [];
+         while (temp > 0) {
+            nextArray = nextArray.concat(0);
+            temp--;
+          }
+
+         if (hShift === 'right') {
+          tempArray = nextArray.concat(tempArray);
+
+          /* Replace the row of mainboard with tempArray */
+
+          for (let m = 0; m < 4; m++) {
+            mainboard[q][m] = tempArray[m];
+          }
+          // console.log('finally', tempArray);
+         } else if (hShift === 'left') {
+           tempArray = tempArray.concat(nextArray);
+           // console.log(tempArray);
+
+           /* Replace the row of mainboard with tempArray */
+
+           for (let m = 0; m < 4; m++) {
+            mainboard[q][m] = tempArray[m];
+          }
+         }
+         q++;
       }
+      return {mainboardState: mainboard, move: moveNumber};
     }
+
+
+
+    /* Choose a random spot in the matrix
+    Populate the spot with a 2 or 4 (randomly selected using a rand from 0-1) */
 
     populateRandom(mainboard: any[][]) {
       // console.table(this.mainboard);
