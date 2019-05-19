@@ -1,5 +1,5 @@
 import { Component, OnInit, HostListener } from '@angular/core';
-import { trigger, transition, style, animate } from '@angular/animations';
+import { trigger, transition, style, animate, state, keyframes } from '@angular/animations';
 import { RecordsService } from './records.service';
 
 @Component({
@@ -8,13 +8,24 @@ import { RecordsService } from './records.service';
   styleUrls: ['./app.component.css'],
   animations: [
     trigger('fade', [
-      transition('void=>*', [
-        style({ backgroundColor : 'steelblue', color: '#097054'}),
-        // animate(500, style({backgroundColor : 'red'}))
-        animate(500)
+      state('in', style({transform: 'translateX(0)'})),
+
+      transition('void => *', [
+        animate(500, keyframes([
+          style({opacity: 0, transform: 'translateX(-100%)', offset: 0}),
+          style({backgroundColor: '#FF4136', color: 'white', opacity: 1, transform: 'translateX(15px)',  offset: 0.3}),
+          style({opacity: 1, transform: 'translateX(0)',     offset: 1.0})
+        ]))
+      ]),
+      transition('* => void', [
+        animate(100, keyframes([
+          style({opacity: 1, transform: 'translateX(0)',     offset: 0}),
+          style({opacity: 1, transform: 'translateX(-15px)', offset: 0.7}),
+          style({opacity: 0, transform: 'translateX(100%)',  offset: 1.0})
+        ]))
       ])
     ])
-  ]
+    ]
 })
 export class AppComponent implements OnInit {
 

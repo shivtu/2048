@@ -3,7 +3,7 @@
   <table>
     <tr *ngFor="let items of mainboard">
       <td *ngFor="let item of items">
-        <p *ngIf= "item>0" @fade>{{item}}</p>
+        <span *ngIf= "item>0" [@fade]="state">{{item}}</span>
       </td>
     </tr>
   </table>

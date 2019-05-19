@@ -1,11 +1,13 @@
-import { Injectable } from '@angular/core';
+import { Injectable, IterableDiffers } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RecordsService {
 
-  constructor() { }
+  animatedValues: any[];
+
+  constructor() {}
 
     /* shift all elements up & merge same elements;1 col at a time
     Method will shift elements up or down as per vShift param*/
@@ -28,7 +30,7 @@ export class RecordsService {
             p++;
           }
 
-          /* Merge cells with same values */
+          /* Merge cells with same values in the tempArray */
 
           for (let i = 0; i < 4; i++) {
               if ((tempArray[i] !== 0 || undefined) && tempArray[i] === tempArray[i + 1] && (i + 1 < 4)) {
@@ -50,7 +52,7 @@ export class RecordsService {
               }
             }
 
-          /* Filter all elements greater than 0 */
+          /* In tempArray filter all elements greater than 0 */
           tempArray = tempArray.filter(val => val);
 
           // debugger;
@@ -78,7 +80,6 @@ export class RecordsService {
             let nextTemp = 4 - tempArray.length;
 
             /* Create an array with 0's (nextArray) to remaining length of the tempArray */
-
             let nextArray = [];
             while (nextTemp > 0) {
               nextArray = nextArray.concat(0);
@@ -86,12 +87,10 @@ export class RecordsService {
             }
 
             /* Concat tempArray to nextArray array */
-
             nextArray = nextArray.concat(tempArray);
             // break;
 
             /* fill the mainboard col with the new array (nextArray) */
-
             let t = 0;
             while (t <= 3) {
               // debugger;
@@ -148,16 +147,15 @@ export class RecordsService {
               moveNumber = moveNumber + tempArray[i];
           }
         }
-
         // console.log('after merge', tempArray);
-         /* Filter all elements greater than 0 */
 
+         /* Filter all elements greater than 0 */
          tempArray = tempArray.filter(val => val);
+
          // console.log('after filter', tempArray);
 
          /* Concat 0's to remaining size of the array
           and shift non zero values to the left of the array */
-
          let temp: number = 4 - tempArray.length;
          let nextArray = [];
          while (temp > 0) {
@@ -169,7 +167,6 @@ export class RecordsService {
           tempArray = nextArray.concat(tempArray);
 
           /* Replace the row of mainboard with tempArray */
-
           for (let m = 0; m < 4; m++) {
             mainboard[q][m] = tempArray[m];
           }
@@ -179,7 +176,6 @@ export class RecordsService {
            // console.log(tempArray);
 
            /* Replace the row of mainboard with tempArray */
-
            for (let m = 0; m < 4; m++) {
             mainboard[q][m] = tempArray[m];
           }
@@ -188,7 +184,6 @@ export class RecordsService {
       }
       return {mainboardState: mainboard, move: moveNumber};
     }
-
 
 
     /* Choose a random spot in the matrix
@@ -211,8 +206,36 @@ export class RecordsService {
         mainboard[rand.x][rand.y] = r;
         return true;
       } else {
-        alert('Game Over!');
-        return false;
+        let gameStatus = false;
+
+        /* Check each row for possible merges */
+        for (let row = 0; row < 4; row++) {
+          let col = 0;
+          while (col < 3) {
+            if (mainboard[row][col] === mainboard[row][col + 1]) {
+              gameStatus = true;
+            }
+            col++;
+          }
+        }
+
+        /* Check each col for possible merges */
+
+
+        for (let r = 0; r < 4; r++) {
+          let g = 0;
+          while (g < 3) {
+            if (mainboard[g][r] === mainboard[g + 1][r]) {
+              gameStatus = true;
+            }
+            g++;
+          }
+        }
+
+        if (!gameStatus) {
+          alert('Game over!');
+        }
+        return gameStatus;
       }
     }
 }
