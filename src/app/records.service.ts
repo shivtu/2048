@@ -5,8 +5,6 @@ import { Injectable, IterableDiffers } from '@angular/core';
 })
 export class RecordsService {
 
-  animatedValues: any[];
-
   constructor() {}
 
     /* shift all elements up & merge same elements;1 col at a time
@@ -220,7 +218,6 @@ export class RecordsService {
         }
 
         /* Check each col for possible merges */
-
 
         for (let r = 0; r < 4; r++) {
           let g = 0;

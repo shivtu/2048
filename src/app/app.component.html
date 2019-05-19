@@ -1,13 +1,13 @@
 <div class="center">
-  <h2>Score {{moveNumber}}</h2>
-  <table>
-    <tr *ngFor="let items of mainboard">
+  <h2 style="color: black">Score {{moveNumber}}</h2>
+  <table (swiperight)="userArrowRight()" (swipeleft)="userArrowLeft()">
+    <tr *ngFor="let items of mainboard" (swipeup)="userArrowUp()" (swipedown)="userArrowDown()">
       <td *ngFor="let item of items">
         <span *ngIf= "item>0" [@fade]="state">{{item}}</span>
       </td>
     </tr>
   </table>
-  <hr/>
-  <button (click)="newGame()" class="center">New Game</button>
+  <br/>
+  <button (click)="newGame()">New Game</button>
 </div>
 
